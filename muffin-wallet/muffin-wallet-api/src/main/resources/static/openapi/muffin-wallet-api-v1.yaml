@@ -1,0 +1,170 @@
+openapi: 3.0.3
+info:
+  title: Muffin Wallet API
+  description: |
+    Api for transfering muffins between wallets.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: localhost
+
+tags:
+  - name: Muffin wallet
+    description: Controll of muffin wallets
+
+paths:
+  /v1/muffin-wallets:
+    post:
+      tags:
+        - Muffin wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMuffinWallet"
+      responses:
+        '200':
+          description: Created muffin wallet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MuffinWallet"            
+    get:
+      tags:
+        - Muffin wallet
+      parameters:
+        - name: owner_name
+          in: query
+          schema:
+            type: string
+        - in: query 
+          name: pageable
+          required: false
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: Muffin wallets page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedModelMuffinWallet'
+  /v1/muffin-wallet/{id}:
+    get:
+      tags:
+        - Muffin wallet
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Muffin wallet by id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MuffinWallet"
+  /v1/muffin-wallet/{id}/transaction:
+    post:
+      tags:
+        - Muffin wallet
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionMuffinTo"
+      responses:
+        '200':
+          description: Transaction muffin
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionMuffin"
+              
+    
+components:
+  schemas:
+    TransactionMuffin:
+      properties:
+        id:
+          type: string
+          format: uuid
+        to_muffin_wallet_id:
+          type: string
+          format: uuid
+        from_muffin_wallet_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: decimal
+        created_at:
+          type: string
+          format: date-time        
+    TransactionMuffinTo:
+      properties:
+        to_muffin_wallet_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: decimal
+    CreateMuffinWallet:
+      properties:
+        owner_name:
+          type: string
+    MuffinWallet:
+      properties:
+        id:
+          type: string
+          format: uuid
+        owner_name:
+          type: string
+        balance:
+          type: number
+          format: decimal
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    PagedModelMuffinWallet:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/MuffinWallet"
+        page:
+          type: object
+          properties:
+            size:
+              type: integer
+            number:
+              type: integer
+            totalElements:  
+              type: integer
+            totalPages:
+              type: integer
+    Pageable:   
+      description: minimal Pageable query parameters
+      type: object
+      properties:
+        page:
+          type: integer
+        size:
+          type: integer

@@ -1,0 +1,20 @@
+replicaCount: 1
+
+image:
+  repository: gendalf1231/muffin-wallet
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 8080
+
+env:
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/walletdb"
+  SPRING_DATASOURCE_USERNAME: "wallet"
+  SPRING_DATASOURCE_PASSWORD: "walletpass"
+
+
+probes:
+  readinessPath: "/actuator/health"
+  livenessPath: "/actuator/health"

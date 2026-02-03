@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hw-ingress
+  namespace: hw
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: muffin-wallet.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: muffin-wallet
+                port:
+                  number: 8080
+    - host: muffin-currency.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: muffin-currency
+                port:
+                  number: 8083

@@ -1,0 +1,38 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'io.freefair.lombok' apply false
+    id 'io.spring.dependency-management' apply false
+    id 'org.springframework.boot' apply false
+    id 'org.openapi.generator' apply false
+    id 'com.google.cloud.tools.jib' apply false
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.freefair.lombok'
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencyManagement {
+        imports {
+            mavenBom SpringBootPlugin.BOM_COORDINATES
+            mavenBom "io.zonky.test.postgres:embedded-postgres-binaries-bom:$embeddedPostgresBinariesBomVersion"
+        }
+
+        dependencies{
+            dependency "org.mapstruct:mapstruct:$mapstructVersion"
+            dependency "org.mapstruct:mapstruct-processor:$mapstructVersion"
+            dependency "org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion"
+            dependency "io.cucumber:cucumber-java:$cucumberVersion"
+            dependency "io.cucumber:cucumber-spring:$cucumberVersion"
+            dependency "io.cucumber:cucumber-junit-platform-engine:$cucumberVersion"
+            dependency "io.zonky.test:embedded-postgres:$embeddedPostgresVersion"
+            dependency "io.zonky.test:embedded-database-spring-test:$embededDatabaseSpringTestVersion"
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}

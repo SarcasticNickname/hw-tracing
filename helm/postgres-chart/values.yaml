@@ -1,0 +1,35 @@
+fullnameOverride: "postgres"
+
+image:
+  repository: postgres
+  tag: "16-alpine"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 5432
+
+auth:
+  database: "walletdb"
+  username: "wallet"
+  password: "walletpass"
+
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 2Gi
+  storageClassName: ""
+
+
+containerSecurityContext:
+  runAsUser: 0
+  runAsGroup: 0
+  runAsNonRoot: false
+  allowPrivilegeEscalation: false
+
+initdb:
+  enabled: true
+  createUuidOssp: true
