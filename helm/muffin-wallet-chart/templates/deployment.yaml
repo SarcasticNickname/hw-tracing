@@ -28,6 +28,13 @@ spec:
               value: {{ .Values.env.SPRING_DATASOURCE_USERNAME | quote }}
             - name: SPRING_DATASOURCE_PASSWORD
               value: {{ .Values.env.SPRING_DATASOURCE_PASSWORD | quote }}
+            - name: LOG_PATH
+              value: {{ .Values.logs.mountPath | quote }}
+            - name: ZIPKIN_ENDPOINT
+              value: {{ .Values.tracing.zipkinEndpoint | quote }}
+          volumeMounts:
+            - name: logs
+              mountPath: {{ .Values.logs.mountPath }}
           readinessProbe:
             httpGet:
               path: {{ .Values.probes.readinessPath | quote }}
@@ -40,3 +47,30 @@ spec:
               port: {{ .Values.service.port }}
             initialDelaySeconds: 20
             periodSeconds: 10
+
+        {{- if .Values.promtail.enabled }}
+        - name: promtail
+          image: "{{ .Values.promtail.image.repository }}:{{ .Values.promtail.image.tag }}"
+          imagePullPolicy: {{ .Values.promtail.image.pullPolicy }}
+          args:
+            - -config.file=/etc/promtail/config.yaml
+          ports:
+            - name: promtail
+              containerPort: 9080
+          volumeMounts:
+            - name: logs
+              mountPath: {{ .Values.logs.mountPath }}
+            - name: promtail-config
+              mountPath: /etc/promtail
+        {{- end }}
+
+      volumes:
+        - name: logs
+          persistentVolumeClaim:
+            claimName: {{ include "muffin-wallet.fullname" . }}-logs
+
+        {{- if .Values.promtail.enabled }}
+        - name: promtail-config
+          configMap:
+            name: {{ include "muffin-wallet.fullname" . }}-promtail
+        {{- end }}

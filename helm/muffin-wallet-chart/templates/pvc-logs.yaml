@@ -1,0 +1,17 @@
+{{- if .Values.logs.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "muffin-wallet.fullname" . }}-logs
+  labels:
+    {{- include "muffin-wallet.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.logs.pvc.size | quote }}
+  {{- if .Values.logs.pvc.storageClassName }}
+  storageClassName: {{ .Values.logs.pvc.storageClassName | quote }}
+  {{- end }}
+{{- end }}

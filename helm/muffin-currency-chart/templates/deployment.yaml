@@ -21,14 +21,46 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
-
+          env:
+            - name: LOG_DIR
+              value: {{ .Values.logs.mountPath | quote }}
+            - name: ZIPKIN_ENDPOINT
+              value: {{ .Values.tracing.zipkinEndpoint | quote }}
+          volumeMounts:
+            - name: logs
+              mountPath: {{ .Values.logs.mountPath }}
           readinessProbe:
             httpGet:
               path: /readyz
               port: {{ .Values.service.targetPort }}
-
           livenessProbe:
             httpGet:
               path: /healthz
               port: {{ .Values.service.targetPort }}
 
+        {{- if .Values.promtail.enabled }}
+        - name: promtail
+          image: "{{ .Values.promtail.image.repository }}:{{ .Values.promtail.image.tag }}"
+          imagePullPolicy: {{ .Values.promtail.image.pullPolicy }}
+          args:
+            - -config.file=/etc/promtail/config.yaml
+          ports:
+            - name: promtail
+              containerPort: 9080
+          volumeMounts:
+            - name: logs
+              mountPath: {{ .Values.logs.mountPath }}
+            - name: promtail-config
+              mountPath: /etc/promtail
+        {{- end }}
+
+      volumes:
+        - name: logs
+          persistentVolumeClaim:
+            claimName: {{ include "muffin-currency.fullname" . }}-logs
+
+        {{- if .Values.promtail.enabled }}
+        - name: promtail-config
+          configMap:
+            name: {{ include "muffin-currency.fullname" . }}-promtail
+        {{- end }}

@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: gendalf1231/muffin-currency
-  tag: "1.0.0"
+  tag: "v1.0.1"
   pullPolicy: IfNotPresent
 
 service:
@@ -13,3 +13,22 @@ service:
 probes:
   readinessPath: "/readyz"
   livenessPath: "/healthz"
+
+logs:
+  enabled: true
+  mountPath: /logs
+  pvc:
+    size: 1Gi
+    storageClassName: ""
+
+tracing:
+  zipkinEndpoint: "http://tempo.observability.svc.cluster.local:9411/api/v2/spans"
+
+promtail:
+  enabled: true
+  image:
+    repository: grafana/promtail
+    tag: "2.9.7"
+    pullPolicy: IfNotPresent
+  clientUrl: "http://loki.observability.svc.cluster.local:3100/loki/api/v1/push"
+

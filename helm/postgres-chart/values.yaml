@@ -33,3 +33,11 @@ containerSecurityContext:
 initdb:
   enabled: true
   createUuidOssp: true
+
+logs:
+  enabled: true
+  mountPath: /logs
+  pvc:
+    size: 1Gi
+    storageClassName: ""
+
