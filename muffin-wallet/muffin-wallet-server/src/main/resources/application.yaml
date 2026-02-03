@@ -8,10 +8,6 @@ management:
       type: w3c
     sampling:
       probability: 1.0
-    export:
-      zipkin:
-        enabled: true
-        endpoint: ${ZIPKIN_ENDPOINT:http://tempo.observability.svc.cluster.local:9411/api/v2/spans}
 
   zipkin:
     tracing:
@@ -28,15 +24,15 @@ management:
         enabled: true
       show-details: always
 
+logging:
+  file:
+    name: ${LOG_PATH:/logs}/app.log
+  level:
+    root: INFO
+
 springdoc:
   swagger-ui:
     use-root-path: true
     urls:
       - name: muffin-wallet-api-v1
         url: /openapi/muffin-wallet-api-v1.yaml
-
-logging:
-  file:
-    name: ${LOG_PATH:/logs}/app.log
-  level:
-    root: INFO

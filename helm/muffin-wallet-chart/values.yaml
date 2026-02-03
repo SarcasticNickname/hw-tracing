@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: gendalf1231/muffin-wallet
-  tag: "v1.0.4"
+  tag: "v1.0.7"
   pullPolicy: IfNotPresent
 
 service:

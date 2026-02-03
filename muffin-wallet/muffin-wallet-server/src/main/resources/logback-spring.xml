@@ -40,6 +40,8 @@
                     <fieldName>message</fieldName>
                 </message>
 
+                <arguments/>
+
                 <stackTrace>
                     <fieldName>stackTrace</fieldName>
                 </stackTrace>
@@ -91,6 +93,8 @@
                     <fieldName>message</fieldName>
                 </message>
 
+                <arguments/>
+
                 <stackTrace>
                     <fieldName>stackTrace</fieldName>
                 </stackTrace>
@@ -98,6 +102,11 @@
             </providers>
         </encoder>
     </appender>
+
+    <logger name="http.access" level="INFO" additivity="false">
+        <appender-ref ref="JSON_CONSOLE"/>
+        <appender-ref ref="JSON_FILE"/>
+    </logger>
 
     <root level="INFO">
         <appender-ref ref="JSON_CONSOLE"/>
