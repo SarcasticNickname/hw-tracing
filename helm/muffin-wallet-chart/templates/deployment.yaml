@@ -20,7 +20,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.service.targetPort }}
           env:
             - name: SPRING_DATASOURCE_URL
               value: {{ .Values.env.SPRING_DATASOURCE_URL | quote }}
@@ -38,13 +38,13 @@ spec:
           readinessProbe:
             httpGet:
               path: {{ .Values.probes.readinessPath | quote }}
-              port: {{ .Values.service.port }}
+              port: {{ .Values.service.targetPort }}
             initialDelaySeconds: 10
             periodSeconds: 5
           livenessProbe:
             httpGet:
               path: {{ .Values.probes.livenessPath | quote }}
-              port: {{ .Values.service.port }}
+              port: {{ .Values.service.targetPort }}
             initialDelaySeconds: 20
             periodSeconds: 10
 

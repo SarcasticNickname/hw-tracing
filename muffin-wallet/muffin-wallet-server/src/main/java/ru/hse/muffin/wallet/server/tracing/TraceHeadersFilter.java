@@ -14,7 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-@Order(Ordered.HIGHEST_PRECEDENCE + 20)
+@Order(Ordered.HIGHEST_PRECEDENCE - 10)
 public class TraceHeadersFilter extends OncePerRequestFilter {
 
     private static final String TRACE_HEADER = "X-Trace-Id";

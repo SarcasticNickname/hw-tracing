@@ -2,12 +2,13 @@ replicaCount: 1
 
 image:
   repository: gendalf1231/muffin-wallet
-  tag: "v1.0.2"
+  tag: "v1.0.4"
   pullPolicy: IfNotPresent
 
 service:
   type: LoadBalancer
-  port: 8080
+  port: 8085
+  targetPort: 8080
 
 env:
   SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/walletdb"
